@@ -4,9 +4,12 @@ import * as Yup from "yup"
 import axios from "axios"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
+import { useState } from "react"
 
 
 const Register = ({ setisLoading }) => {
+
+    const[isload , setisload] = useState(false);
      const navigate = useNavigate()
    const formik =  useFormik({
         initialValues:{
@@ -24,7 +27,7 @@ const Register = ({ setisLoading }) => {
         onSubmit: async (values) => {
             try {
                 
-                
+                setisload(true)
                 const response = await axios.post("/register" , {
                     name:values.Name,
                     email:values.Email,
@@ -42,6 +45,9 @@ const Register = ({ setisLoading }) => {
 
             } catch (error) {
                 toast.error(error.response?.data?.message || "registration failed")
+            }
+            finally{
+                setisload(false);
             }
         }
 
@@ -78,7 +84,9 @@ const Register = ({ setisLoading }) => {
             </div>
 
             <div className="field">
-                <button type="submit">Register</button>
+                {
+                    isload ? <button>Loading.....</button>:<button type="submit">Register</button>
+                }
             </div>
         </form>
 

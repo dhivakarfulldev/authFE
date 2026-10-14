@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 const ResetPassword = () => {
+
+    const[isload , setisload] = useState(false);
   const { token } = useParams();
 
   const navigate = useNavigate();
@@ -50,6 +52,7 @@ const ResetPassword = () => {
     }),
     onSubmit: async(values) => {
       try {
+        setisload(true);
         const response = await axios.put("/change-password" , {
             newpassword:values.newpassword
         },
@@ -63,6 +66,9 @@ const ResetPassword = () => {
     navigate("/login")
       } catch (error) {
         toast.error(error.response?.data?.message || "Password Change failed")
+      }
+      finally{
+        setisload(false)
       }
     },
   });
@@ -112,7 +118,9 @@ const ResetPassword = () => {
           ) : null}
         </div>
         <div className="field">
-          <button type="submit">change Password</button>
+          {
+            isload ? <button>Loading....</button>:<button type="submit">change Password</button>
+          }
         </div>
       </form>
     </div>

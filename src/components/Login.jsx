@@ -4,9 +4,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup"
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 
 const Login = ({setisLoading}) => {
+
+    const [isload , setisload] = useState(false);
       const navigate = useNavigate()
     const handleclick = () => {
         navigate("/forgot-password")
@@ -29,7 +32,7 @@ const Login = ({setisLoading}) => {
         onSubmit: async (values) => {
             try {
                 
-                
+                setisload(true)
                 const response = await axios.post("/login" , {
                    
                     email:values.Email,
@@ -47,6 +50,9 @@ const Login = ({setisLoading}) => {
 
             } catch (error) {
                 toast.error(error.response?.data?.message || "registration failed")
+            }
+            finally{
+                setisload(false);
             }
         }
 })
@@ -72,7 +78,9 @@ const Login = ({setisLoading}) => {
             </div>
 
             <div className="field">
-                <button type="submit">Login</button>
+               {
+                isload ?  <button>Loading....</button>:<button type="submit">Login</button>
+               }
             </div>
 
             <p className="error-btn" onClick={handleclick}>forgotpassword</p>
